@@ -282,7 +282,7 @@ public class DefaultCommentGenerator implements CommentGenerator {
             IntrospectedColumn introspectedColumn) {
 
         String comment = "";
-        if(introspectedColumn.getActualColumnName().contains("id")){
+        if(introspectedColumn.getActualColumnName().contains("Id")){
             comment = "@Column(name=\"" + introspectedColumn.getActualColumnName() + "\", updatable=false)";
         }else {
             comment = "@Column(name=\"" + introspectedColumn.getActualColumnName() + "\")";
