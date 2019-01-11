@@ -221,8 +221,9 @@ public class DefaultCommentGenerator implements CommentGenerator {
     public void addModelClassComment(TopLevelClass topLevelClass,
                                      IntrospectedTable introspectedTable) {
 
-        String comment = "@Entity(name = \"" + introspectedTable.getFullyQualifiedTable() + "\")";
-        topLevelClass.addAnnotation(comment);
+//        String comment = "@Entity(name = \"" + introspectedTable.getFullyQualifiedTable() + "\")";
+        topLevelClass.addAnnotation("@@ApiModel" + "\r\n");
+        topLevelClass.addAnnotation("@Entity(name = \"" + introspectedTable.getFullyQualifiedTable() + "\")");
 
         if (suppressAllComments || !addRemarkComments) {
             return;
@@ -280,13 +281,12 @@ public class DefaultCommentGenerator implements CommentGenerator {
                                 IntrospectedTable introspectedTable,
                                 IntrospectedColumn introspectedColumn) {
 
-
-
         StringBuilder sbt = new StringBuilder();
         if (introspectedColumn.getActualColumnName().contains("ID")) {
             String generator = introspectedTable.getFullyQualifiedTable() + "_seq";
             String sequenceName = introspectedTable.getFullyQualifiedTable() + "_id_seq";
             sbt.append("\r\n");
+            sbt.append("    @ApiModelProperty(name=\"" + introspectedColumn.getRemarks() + "\")").append("\r\n");
             sbt.append("    @Id").append("\r\n");
             sbt.append("    @GeneratedValue(strategy= GenerationType.SEQUENCE, generator=\"" + generator + "\")").append("\r\n");
             sbt.append("    @SequenceGenerator(name=\"" + generator + "\", sequenceName=\"" + sequenceName + "\",initialValue = 1 , allocationSize = 1)").append("\r\n");
