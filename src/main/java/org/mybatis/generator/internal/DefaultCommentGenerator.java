@@ -222,7 +222,7 @@ public class DefaultCommentGenerator implements CommentGenerator {
                                      IntrospectedTable introspectedTable) {
 
 //        String comment = "@Entity(name = \"" + introspectedTable.getFullyQualifiedTable() + "\")";
-        topLevelClass.addAnnotation("@@ApiModel" + "\r\n");
+        topLevelClass.addAnnotation("@ApiModel");
         topLevelClass.addAnnotation("@Entity(name = \"" + introspectedTable.getFullyQualifiedTable() + "\")");
 
         if (suppressAllComments || !addRemarkComments) {
@@ -257,6 +257,8 @@ public class DefaultCommentGenerator implements CommentGenerator {
     @Override
     public void addEnumComment(InnerEnum innerEnum,
                                IntrospectedTable introspectedTable) {
+
+
         if (suppressAllComments) {
             return;
         }
@@ -282,17 +284,17 @@ public class DefaultCommentGenerator implements CommentGenerator {
                                 IntrospectedColumn introspectedColumn) {
 
         StringBuilder sbt = new StringBuilder();
-        if (introspectedColumn.getActualColumnName().contains("ID")) {
+        sbt.append("\r\n");
+        sbt.append("    @ApiModelProperty(name=\"" + introspectedColumn.getRemarks() + "\")").append("\r\n");
+        if (introspectedColumn.getActualColumnName().contains("ID") ||introspectedColumn.getActualColumnName().contains("id")) {
             String generator = introspectedTable.getFullyQualifiedTable() + "_seq";
             String sequenceName = introspectedTable.getFullyQualifiedTable() + "_id_seq";
-            sbt.append("\r\n");
-            sbt.append("    @ApiModelProperty(name=\"" + introspectedColumn.getRemarks() + "\")").append("\r\n");
             sbt.append("    @Id").append("\r\n");
             sbt.append("    @GeneratedValue(strategy= GenerationType.SEQUENCE, generator=\"" + generator + "\")").append("\r\n");
-            sbt.append("    @SequenceGenerator(name=\"" + generator + "\", sequenceName=\"" + sequenceName + "\",initialValue = 1 , allocationSize = 1)").append("\r\n");
+            sbt.append("    @SequenceGenerator(name=\"" + generator + "\", sequenceName=\"" + sequenceName + "\", initialValue = 1 , allocationSize = 1)").append("\r\n");
             sbt.append("    @Column(name=\"" + introspectedColumn.getActualColumnName() + "\", updatable=false)");
         } else {
-            sbt.append("@Column(name=\"" + introspectedColumn.getActualColumnName() + "\")");
+            sbt.append("    @Column(name=\"" + introspectedColumn.getActualColumnName() + "\")");
         }
         field.addAnnotation(sbt.toString());
 
